@@ -172,7 +172,7 @@ export async function fetchGoalLeaders(): Promise<GoalLeader[]> {
   // The statistics API doesn't include team info per player.
   // We need to cross-reference with match summaries to find which team each scorer belongs to.
   // Build a map: athleteId -> team abbreviation from finished matches.
-  const playerTeamMap = new Map<string, { abbreviation: string; logos?: { href: string; rel?: string[] }[] }>();
+  const playerTeamMap = new Map<string, { id: string; displayName: string; abbreviation: string; logos?: { href: string; rel?: string[] }[] }>();
 
   try {
     const events = await fetchScoreboard();
@@ -190,10 +190,12 @@ export async function fetchGoalLeaders(): Promise<GoalLeader[]> {
       if (!comp) continue;
 
       // Build a map of teamId -> team info for this match
-      const teamInfoMap = new Map<string, { abbreviation: string; logos?: { href: string; rel?: string[] }[] }>();
+      const teamInfoMap = new Map<string, { id: string; displayName: string; abbreviation: string; logos?: { href: string; rel?: string[] }[] }>();
       for (const c of comp.competitors) {
         if (c.team) {
           teamInfoMap.set(c.team.id, {
+            id: c.team.id,
+            displayName: c.team.displayName,
             abbreviation: c.team.abbreviation,
             logos: c.team.logos,
           });
