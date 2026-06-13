@@ -170,38 +170,38 @@ export default async function MatchPage({ params }: Props) {
 
           {/* Teams & Score */}
           <div className="flex items-center justify-center gap-6 md:gap-12">
-            <div className="text-center flex-1">
+            <div className="text-center flex-1 min-w-0">
               {home?.team && getTeamLogo(home.team) ? (
-                <img src={getTeamLogo(home.team)} alt={home.team.displayName} className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-3 object-contain" />
+                <img src={getTeamLogo(home.team)} alt={home.team.displayName} className="w-14 h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 mx-auto mb-2 md:mb-3 object-contain" />
               ) : (
-                <div className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-3 rounded-full bg-gray-700/50 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-gray-400">{home?.team.abbreviation}</span>
+                <div className="w-14 h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 mx-auto mb-2 md:mb-3 rounded-full bg-gray-700/50 flex items-center justify-center">
+                  <span className="text-lg md:text-2xl font-bold text-gray-400">{home?.team.abbreviation}</span>
                 </div>
               )}
-              <h2 className="text-white font-bold text-lg md:text-xl">{home?.team.displayName}</h2>
+              <h2 className="text-white font-bold text-xs md:text-lg lg:text-xl truncate">{home?.team.displayName}</h2>
             </div>
 
-            <div className="text-center">
+            <div className="text-center flex-shrink-0">
               {!isUpcoming ? (
-                <div className="flex items-center gap-4">
-                  <span className={`text-5xl md:text-7xl font-bold tabular-nums ${home?.winner ? 'text-emerald-400' : 'text-white'}`}>{home?.score ?? '0'}</span>
-                  <span className="text-3xl text-gray-600 font-light">-</span>
-                  <span className={`text-5xl md:text-7xl font-bold tabular-nums ${away?.winner ? 'text-emerald-400' : 'text-white'}`}>{away?.score ?? '0'}</span>
+                <div className="flex items-center gap-2 md:gap-4">
+                  <span className={`text-3xl md:text-5xl lg:text-7xl font-bold tabular-nums ${home?.winner ? 'text-emerald-400' : 'text-white'}`}>{home?.score ?? '0'}</span>
+                  <span className="text-xl md:text-3xl text-gray-600 font-light">-</span>
+                  <span className={`text-3xl md:text-5xl lg:text-7xl font-bold tabular-nums ${away?.winner ? 'text-emerald-400' : 'text-white'}`}>{away?.score ?? '0'}</span>
                 </div>
               ) : (
-                <span className="text-3xl text-gray-500 font-light">VS</span>
+                <span className="text-2xl md:text-3xl text-gray-500 font-light">VS</span>
               )}
             </div>
 
-            <div className="text-center flex-1">
+            <div className="text-center flex-1 min-w-0">
               {away?.team && getTeamLogo(away.team) ? (
-                <img src={getTeamLogo(away.team)} alt={away.team.displayName} className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-3 object-contain" />
+                <img src={getTeamLogo(away.team)} alt={away.team.displayName} className="w-14 h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 mx-auto mb-2 md:mb-3 object-contain" />
               ) : (
-                <div className="w-20 h-20 md:w-28 md:h-28 mx-auto mb-3 rounded-full bg-gray-700/50 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-gray-400">{away?.team.abbreviation}</span>
+                <div className="w-14 h-14 md:w-20 md:h-20 lg:w-28 lg:h-28 mx-auto mb-2 md:mb-3 rounded-full bg-gray-700/50 flex items-center justify-center">
+                  <span className="text-lg md:text-2xl font-bold text-gray-400">{away?.team.abbreviation}</span>
                 </div>
               )}
-              <h2 className="text-white font-bold text-lg md:text-xl">{away?.team.displayName}</h2>
+              <h2 className="text-white font-bold text-xs md:text-lg lg:text-xl truncate">{away?.team.displayName}</h2>
             </div>
           </div>
 
@@ -221,8 +221,8 @@ export default async function MatchPage({ params }: Props) {
       {isUpcoming && comp.venue && venueCapacityMap[comp.venue.fullName] && (
         <section className="mb-8">
           <h3 className="text-lg font-bold text-white mb-4">Info Stadio</h3>
-          <div className="bg-gray-800/60 rounded-2xl border border-gray-700/50 p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-gray-800/60 rounded-2xl border border-gray-700/50 p-4 md:p-6">
+            <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div>
                 <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Stadio</p>
                 <p className="text-white font-medium">{comp.venue.fullName}</p>

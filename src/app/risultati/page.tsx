@@ -27,17 +27,17 @@ export default async function RisultatiPage() {
   }, 0);
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-6">
-      <div className="mb-6 flex items-end justify-between">
+    <main className="max-w-4xl mx-auto px-4 py-4 md:py-6">
+      <div className="mb-5 md:mb-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-1">Risultati</h1>
-          <p className="text-gray-400 text-sm">Tutte le partite giocate finora</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Risultati</h1>
+          <p className="text-gray-400 text-xs md:text-sm">Tutte le partite giocate finora</p>
         </div>
-        <div className="flex gap-3">
-          <span className="text-xs text-gray-500 bg-gray-800 px-3 py-1.5 rounded-full">
+        <div className="flex gap-2">
+          <span className="text-[10px] md:text-xs text-gray-500 bg-gray-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">
             {finished.length} partite
           </span>
-          <span className="text-xs text-gray-500 bg-gray-800 px-3 py-1.5 rounded-full">
+          <span className="text-[10px] md:text-xs text-gray-500 bg-gray-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">
             {totalGoals} gol
           </span>
         </div>

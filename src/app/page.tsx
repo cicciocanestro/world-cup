@@ -42,27 +42,27 @@ export default async function HomePage() {
   };
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-6 space-y-8">
+    <main className="max-w-4xl mx-auto px-4 py-4 md:py-6 space-y-6 md:space-y-8">
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-gray-900 p-6 md:p-10">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+      <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-br from-emerald-600 via-emerald-700 to-gray-900 p-5 md:p-10">
+        <div className="absolute top-0 right-0 w-40 h-40 md:w-64 md:h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-32 h-32 md:w-48 md:h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="relative">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="px-3 py-1 bg-white/10 rounded-full text-xs font-semibold text-emerald-200 uppercase tracking-wider">
+          <div className="flex flex-wrap items-center gap-2 mb-2 md:mb-3">
+            <span className="px-2.5 py-0.5 md:px-3 md:py-1 bg-white/10 rounded-full text-[10px] md:text-xs font-semibold text-emerald-200 uppercase tracking-wider">
               Mondiali FIFA 2026™
             </span>
             {live.length > 0 && (
-              <span className="px-3 py-1 bg-red-500/20 rounded-full text-xs font-semibold text-red-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="px-2.5 py-0.5 md:px-3 md:py-1 bg-red-500/20 rounded-full text-[10px] md:text-xs font-semibold text-red-300 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                 {live.length} Live
               </span>
             )}
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">
+          <h2 className="text-xl md:text-3xl font-bold text-white mb-1">
             {live.length > 0 ? `${live.length} Partit${live.length > 1 ? 'e' : 'a'} Live Ora` : 'Mondiali FIFA 2026'}
           </h2>
-          <p className="text-emerald-200/70 text-sm">
+          <p className="text-emerald-200/70 text-xs md:text-sm">
             USA · Canada · Messico · 48 Squadre · 104 Partite · 11 Giugno – 19 Luglio
           </p>
         </div>

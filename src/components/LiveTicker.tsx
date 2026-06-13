@@ -53,30 +53,30 @@ export function LiveTicker() {
 
   return (
     <div className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-emerald-600 text-white overflow-hidden">
-      <div className="flex items-center">
-        <div className="flex-shrink-0 px-4 py-2 bg-emerald-700 font-bold text-sm flex items-center gap-2">
-          <span className="relative flex h-2.5 w-2.5">
+      <div className="flex items-center h-8 md:h-auto">
+        <div className="flex-shrink-0 px-2 md:px-4 py-1 md:py-2 bg-emerald-700 font-bold text-[10px] md:text-sm flex items-center gap-1 md:gap-2">
+          <span className="relative flex h-2 w-2 md:h-2.5 md:w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 md:h-2.5 md:w-2.5 bg-red-500"></span>
           </span>
           LIVE
         </div>
         <div className="overflow-hidden flex-1">
           <div className="flex animate-scroll">
             {[...matches, ...matches].map((m, i) => (
-              <Link key={`${m.id}-${i}`} href={`/matches/${m.id}`} className="flex items-center gap-3 px-6 py-2 hover:bg-emerald-600/50 transition-colors whitespace-nowrap">
-                <div className="flex items-center gap-2">
-                  {m.home.logo && <img src={m.home.logo} alt="" className="w-5 h-5 object-contain" />}
-                  <span className="font-medium text-sm">{m.home.name}</span>
-                  <span className="font-bold text-lg">{m.home.score}</span>
+              <Link key={`${m.id}-${i}`} href={`/matches/${m.id}`} className="flex items-center gap-1.5 md:gap-3 px-3 md:px-6 py-1 md:py-2 hover:bg-emerald-600/50 transition-colors whitespace-nowrap text-[11px] md:text-sm">
+                <div className="flex items-center gap-1 md:gap-2">
+                  {m.home.logo && <img src={m.home.logo} alt="" className="w-3.5 h-3.5 md:w-5 md:h-5 object-contain" />}
+                  <span className="font-medium truncate max-w-[60px] md:max-w-none">{m.home.abbr}</span>
+                  <span className="font-bold text-sm md:text-lg">{m.home.score}</span>
                 </div>
-                <span className="text-emerald-200 text-xs font-bold px-2 py-0.5 rounded bg-emerald-700/50">{m.isLive ? m.clock : m.status}</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-lg">{m.away.score}</span>
-                  <span className="font-medium text-sm">{m.away.name}</span>
-                  {m.away.logo && <img src={m.away.logo} alt="" className="w-5 h-5 object-contain" />}
+                <span className="text-emerald-200 text-[9px] md:text-xs font-bold px-1 md:px-2 py-0.5 rounded bg-emerald-700/50">{m.isLive ? m.clock : m.status}</span>
+                <div className="flex items-center gap-1 md:gap-2">
+                  <span className="font-bold text-sm md:text-lg">{m.away.score}</span>
+                  <span className="font-medium truncate max-w-[60px] md:max-w-none">{m.away.abbr}</span>
+                  {m.away.logo && <img src={m.away.logo} alt="" className="w-3.5 h-3.5 md:w-5 md:h-5 object-contain" />}
                 </div>
-                <span className="text-emerald-300 mx-2">|</span>
+                <span className="text-emerald-300 mx-1 md:mx-2 hidden md:inline">|</span>
               </Link>
             ))}
           </div>

@@ -24,7 +24,7 @@ export function MatchCard({ match, featured }: MatchCardProps) {
 
   return (
     <Link href={`/matches/${match.id}`}>
-      <div className={`group relative bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-emerald-500/50 transition-all duration-300 overflow-hidden ${featured ? 'p-6' : 'p-4 hover:bg-gray-800/80'}`}>
+      <div className={`group relative bg-gray-800/60 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-emerald-500/50 transition-all duration-300 overflow-hidden ${featured ? 'p-4 md:p-6' : 'p-3 md:p-4 hover:bg-gray-800/80'}`}>
         {isLive && (
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-emerald-500 via-green-400 to-emerald-500 animate-pulse" />
         )}
@@ -61,7 +61,8 @@ export function MatchCard({ match, featured }: MatchCardProps) {
                   )}
                 </div>
                 <span className={`font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${home.winner ? 'text-white' : 'text-gray-300'}`}>
-                  {home.team.displayName}
+                  <span className="hidden sm:inline">{home.team.displayName}</span>
+                  <span className="sm:hidden">{home.team.shortDisplayName || home.team.abbreviation}</span>
                 </span>
               </>
             )}
@@ -83,7 +84,8 @@ export function MatchCard({ match, featured }: MatchCardProps) {
             {away?.team && (
               <>
                 <span className={`font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${away.winner ? 'text-white' : 'text-gray-300'}`}>
-                  {away.team.displayName}
+                  <span className="hidden sm:inline">{away.team.displayName}</span>
+                  <span className="sm:hidden">{away.team.shortDisplayName || away.team.abbreviation}</span>
                 </span>
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-700/50 flex items-center justify-center overflow-hidden">
                   {getTeamLogo(away.team) ? (

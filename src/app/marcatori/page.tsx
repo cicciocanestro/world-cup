@@ -15,10 +15,10 @@ export default async function MarcatoriPage() {
   const sorted = [...leaders].filter(l => l.value > 0).sort((a, b) => b.value - a.value);
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-1">Marcatori</h1>
-        <p className="text-gray-400 text-sm">Classifica cannonieri del torneo</p>
+    <main className="max-w-4xl mx-auto px-4 py-4 md:py-6">
+      <div className="mb-5 md:mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">Marcatori</h1>
+        <p className="text-gray-400 text-xs md:text-sm">Classifica cannonieri del torneo</p>
       </div>
 
       {sorted.length > 0 ? (
