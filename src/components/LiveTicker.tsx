@@ -18,10 +18,10 @@ async function fetchLiveMatches(): Promise<LiveMatch[]> {
     if (!res.ok) return [];
     const events = await res.json();
     return events
-      .filter((e: { competitions: { status: { type: { state: string } } }[] }) => {
+      .filter((e: { competitions: { status: { type: { name: string; state: string } } }[] }) => {
         return e.competitions?.[0]?.status?.type?.state === 'in';
       })
-      .map((e: { id: string; competitions: { competitors: { homeAway: string; team: { displayName: string; abbreviation: string; logos: { href: string }[] }; score: string }[]; status: { displayClock: string; type: { name: string } } }[] }) => {
+      .map((e: { id: string; competitions: { competitors: { homeAway: string; team: { displayName: string; abbreviation: string; logos: { href: string }[] }; score: string }[]; status: { displayClock: string; type: { name: string; state: string } } }[] }) => {
         const comp = e.competitions[0];
         const home = comp.competitors.find((c: { homeAway: string }) => c.homeAway === 'home');
         const away = comp.competitors.find((c: { homeAway: string }) => c.homeAway === 'away');
