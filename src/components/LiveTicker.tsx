@@ -63,7 +63,7 @@ export function LiveTicker() {
         <div className="overflow-hidden flex-1">
           <div className="flex animate-scroll">
             {[...matches, ...matches].map((m, i) => (
-              <Link key={`${m.id}-${i}`} href={`/matches/${m.id}`} className="flex items-center gap-1.5 md:gap-3 px-3 md:px-6 py-1 md:py-2 hover:bg-emerald-600/50 transition-colors whitespace-nowrap text-[11px] md:text-sm">
+              <Link key={`${m.id}-${i}`} href={`/matches/${m.id}`} className="flex items-center gap-1.5 md:gap-3 px-3 md:px-6 py-2 md:py-2 hover:bg-emerald-600/50 transition-colors whitespace-nowrap text-[11px] md:text-sm min-h-[44px]">
                 <div className="flex items-center gap-1 md:gap-2">
                   {m.home.logo && <img src={m.home.logo} alt="" className="w-3.5 h-3.5 md:w-5 md:h-5 object-contain" />}
                   <span className="font-medium truncate max-w-[60px] md:max-w-none">{m.home.abbr}</span>
