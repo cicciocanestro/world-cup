@@ -85,8 +85,11 @@ export function GroupTable({ group }: GroupTableProps) {
                           <span className="text-[7px] md:text-[8px] font-bold text-gray-400">{entry.team.abbreviation}</span>
                         </div>
                       )}
-                      <span className={`text-[11px] md:text-sm font-medium truncate max-w-[80px] sm:max-w-none ${isAdvancing && gp > 0 ? 'text-white' : 'text-gray-300'}`}>
+                      <span className={`hidden sm:inline text-sm font-medium truncate ${isAdvancing && gp > 0 ? 'text-white' : 'text-gray-300'}`}>
                         {entry.team.displayName}
+                      </span>
+                      <span className={`sm:hidden text-[11px] font-medium truncate max-w-[70px] ${isAdvancing && gp > 0 ? 'text-white' : 'text-gray-300'}`}>
+                        {entry.team.abbreviation}
                       </span>
                       {entry.note && entry.note.description && (
                         <span className="text-[8px] md:text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-400 flex-shrink-0">
