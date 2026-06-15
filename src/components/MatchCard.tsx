@@ -63,8 +63,8 @@ export function MatchCard({ match, featured }: MatchCardProps) {
                 <span className={`hidden sm:inline font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${home.winner ? 'text-white' : 'text-gray-300'}`}>
                   {home.team.displayName}
                 </span>
-                <span className={`sm:hidden font-medium truncate max-w-[90px] ${featured ? 'text-lg' : 'text-sm'} ${home.winner ? 'text-white' : 'text-gray-300'}`}>
-                  {home.team.shortDisplayName || home.team.abbreviation}
+                <span className={`sm:hidden font-medium truncate max-w-[80px] ${featured ? 'text-lg' : 'text-sm'} ${home.winner ? 'text-white' : 'text-gray-300'}`}>
+                  {home.team.abbreviation}
                 </span>
               </>
             )}
@@ -88,8 +88,8 @@ export function MatchCard({ match, featured }: MatchCardProps) {
                 <span className={`hidden sm:inline font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${away.winner ? 'text-white' : 'text-gray-300'}`}>
                   {away.team.displayName}
                 </span>
-                <span className={`sm:hidden font-medium truncate max-w-[90px] ${featured ? 'text-lg' : 'text-sm'} ${away.winner ? 'text-white' : 'text-gray-300'}`}>
-                  {away.team.shortDisplayName || away.team.abbreviation}
+                <span className={`sm:hidden font-medium truncate max-w-[80px] ${featured ? 'text-lg' : 'text-sm'} ${away.winner ? 'text-white' : 'text-gray-300'}`}>
+                  {away.team.abbreviation}
                 </span>
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-700/50 flex items-center justify-center overflow-hidden">
                   {getTeamLogo(away.team) ? (
