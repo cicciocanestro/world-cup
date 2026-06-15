@@ -8,10 +8,7 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
   const events = await fetchScoreboard();
 
-  const live = events.filter(e => {
-    const s = e.competitions[0]?.status?.type?.name;
-    return s === 'STATUS_IN_PROGRESS' || s === 'STATUS_HALFTIME';
-  });
+  const live = events.filter(e => e.competitions[0]?.status?.type?.state === 'in');
 
   const finished = events.filter(e => e.competitions[0]?.status?.type?.completed);
   const upcoming = events.filter(e => e.competitions[0]?.status?.type?.state === 'pre');

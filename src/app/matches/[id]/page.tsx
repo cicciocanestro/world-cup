@@ -106,7 +106,7 @@ export default async function MatchPage({ params }: Props) {
   const home = comp.competitors.find(c => c.homeAway === 'home');
   const away = comp.competitors.find(c => c.homeAway === 'away');
   const statusType = comp.status.type;
-  const isLive = statusType.name === 'STATUS_IN_PROGRESS' || statusType.name === 'STATUS_HALFTIME';
+  const isLive = statusType.state === 'in';
   const isFinished = statusType.completed;
   const isUpcoming = statusType.state === 'pre';
   const matchDate = new Date(comp.date);

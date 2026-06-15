@@ -18,9 +18,8 @@ async function fetchLiveMatches(): Promise<LiveMatch[]> {
     if (!res.ok) return [];
     const events = await res.json();
     return events
-      .filter((e: { competitions: { status: { type: { name: string } } }[] }) => {
-        const status = e.competitions?.[0]?.status?.type?.name || '';
-        return status === 'STATUS_IN_PROGRESS' || status === 'STATUS_HALFTIME';
+      .filter((e: { competitions: { status: { type: { state: string } } }[] }) => {
+        return e.competitions?.[0]?.status?.type?.state === 'in';
       })
       .map((e: { id: string; competitions: { competitors: { homeAway: string; team: { displayName: string; abbreviation: string; logos: { href: string }[] }; score: string }[]; status: { displayClock: string; type: { name: string } } }[] }) => {
         const comp = e.competitions[0];
@@ -32,7 +31,7 @@ async function fetchLiveMatches(): Promise<LiveMatch[]> {
           away: { name: away?.team.displayName || '', abbr: away?.team.abbreviation || '', score: away?.score || '0', logo: away?.team?.logos?.[0]?.href || '' },
           status: comp.status.type.name === 'STATUS_HALFTIME' ? 'HT' : comp.status.displayClock || '',
           clock: comp.status.displayClock || '',
-          isLive: comp.status.type.name === 'STATUS_IN_PROGRESS',
+          isLive: comp.status.type.state === 'in' && comp.status.type.name !== 'STATUS_HALFTIME',
         };
       });
   } catch {
