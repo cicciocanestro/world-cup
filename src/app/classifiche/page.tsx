@@ -1,7 +1,7 @@
 import { fetchStandings } from '@/lib/api';
 import { StandingsGrid } from '@/components/GroupTable';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function ClassifichePage() {
   const groups = await fetchStandings();

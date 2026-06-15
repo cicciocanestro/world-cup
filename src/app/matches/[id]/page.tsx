@@ -1,11 +1,11 @@
-import { fetchMatchSummary } from '@/lib/api';
+import { fetchMatchSummary, getTeamLogo } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import type { MatchSummary, GoalEvent } from '@/lib/types';
 
-export const revalidate = 30;
+export const dynamic = 'force-dynamic';
 
 const statLabels: Record<string, string> = {
   'totalShots': 'Tiri Totali',
@@ -91,12 +91,6 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-function getTeamLogo(team: { logos?: { href: string; rel?: string[] }[] }): string {
-  if (!team.logos || team.logos.length === 0) return '';
-  const full = team.logos.find(l => l.rel?.includes('full'));
-  return full?.href || team.logos[0].href;
-}
-
 export default async function MatchPage({ params }: Props) {
   const { id } = await params;
   let summary: MatchSummary;
@@ -108,26 +102,6 @@ export default async function MatchPage({ params }: Props) {
 
   const comp = summary.header?.competitions?.[0];
   if (!comp) notFound();
-
-  // Fetch venue from scoreboard if missing (upcoming matches) — we know the match date from comp.date
-  if (!comp.venue?.fullName && comp.date) {
-    const matchDate = new Date(comp.date);
-    const fmt = (d: Date) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-    const dateStr = fmt(matchDate);
-    try {
-      const res = await fetch(
-        `https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard?dates=${dateStr}`,
-        { next: { revalidate: 300 } }
-      );
-      if (res.ok) {
-        const data = await res.json();
-        const match = data?.events?.find((e: { id: string }) => e.id === id);
-        if (match?.competitions?.[0]?.venue?.fullName) {
-          comp.venue = match.competitions[0].venue;
-        }
-      }
-    } catch {}
-  }
 
   const home = comp.competitors.find(c => c.homeAway === 'home');
   const away = comp.competitors.find(c => c.homeAway === 'away');

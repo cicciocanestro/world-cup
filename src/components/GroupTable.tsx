@@ -10,9 +10,9 @@ interface GroupTableProps {
 export function GroupTable({ group }: GroupTableProps) {
   const entries = group.standings?.entries || [];
   const sorted = [...entries].sort((a, b) => {
-    // Use API rank if available
-    const rankA = getStatNum(a.stats, 'rank');
-    const rankB = getStatNum(b.stats, 'rank');
+    // Use API note.rank if available (always correct)
+    const rankA = a.note?.rank ?? 99;
+    const rankB = b.note?.rank ?? 99;
     if (rankA && rankB) return rankA - rankB;
     // Fallback: sort by points, GD, GF
     const ptsA = getStatNum(a.stats, 'points');

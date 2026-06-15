@@ -1,7 +1,7 @@
 import { fetchGoalLeaders, getTeamLogo } from '@/lib/api';
 import type { GoalLeader } from '@/lib/types';
 
-export const revalidate = 120;
+export const dynamic = 'force-dynamic';
 
 export default async function MarcatoriPage() {
   let leaders: GoalLeader[] = [];

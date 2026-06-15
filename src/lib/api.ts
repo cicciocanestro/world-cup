@@ -7,6 +7,7 @@ const STANDINGS_URL = 'https://site.api.espn.com/apis/v2/sports/soccer/fifa.worl
 const SUMMARY_BASE = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/summary';
 const NEWS_URL = 'https://now.core.api.espn.com/v1/sports/news';
 const TEAMS_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/teams';
+const STATISTICS_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/statistics';
 
 // Cache for team logos
 let teamLogosCache: Map<string, string> | null = null;
@@ -38,47 +39,14 @@ async function getTeamLogosMap(): Promise<Map<string, string>> {
   return map;
 }
 
-function enrichTeamWithLogo(team: { id: string; abbreviation: string; logos?: { href: string }[] }): { id: string; abbreviation: string; logos?: { href: string }[] } {
-  // If team already has logos, return as-is
-  if (team.logos?.length) return team;
-  return team;
-}
-
 export async function fetchScoreboard(): Promise<MatchEvent[]> {
-  // ESPN scoreboard API doesn't support date ranges with startDate/endDate for completed games.
-  // We need to query each day individually from the tournament start (June 11) to today + 3 days.
-  const tournamentStart = new Date('2026-06-11');
-  const end = new Date('2026-07-19'); // Tournament final
-
-  const fmt = (d: Date) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
-
-  const dates: string[] = [];
-  const cursor = new Date(tournamentStart);
-  while (cursor <= end) {
-    dates.push(fmt(cursor));
-    cursor.setDate(cursor.getDate() + 1);
-  }
-
-  // Fetch all dates in parallel
-  const results = await Promise.allSettled(
-    dates.map(date =>
-      fetch(`${SCOREBOARD_URL}?dates=${date}`, { next: { revalidate: 60 } })
-        .then(res => res.ok ? res.json() : { events: [] })
-    )
+  const res = await fetch(
+    `${SCOREBOARD_URL}?dates=20260611-20260719`,
+    { next: { revalidate: 15 } }
   );
-
-  const allEvents: MatchEvent[] = [];
-  const seen = new Set<string>();
-  for (const result of results) {
-    if (result.status === 'fulfilled') {
-      for (const event of (result.value?.events || [])) {
-        if (!seen.has(event.id)) {
-          seen.add(event.id);
-          allEvents.push(event);
-        }
-      }
-    }
-  }
+  if (!res.ok) return [];
+  const data = await res.json();
+  const allEvents: MatchEvent[] = data.events || [];
 
   // Enrich teams with logos from the teams endpoint
   const logosMap = await getTeamLogosMap();
@@ -86,7 +54,7 @@ export async function fetchScoreboard(): Promise<MatchEvent[]> {
     for (const comp of event.competitions || []) {
       for (const competitor of comp.competitors || []) {
         if (competitor.team && !competitor.team.logos?.length) {
-          const logo = logosMap.get(competitor.team.id) || logosMap.get(competitor.team.abbreviation);
+          const logo = logosMap.get(String(competitor.team.id)) || logosMap.get(competitor.team.abbreviation);
           if (logo) {
             competitor.team.logos = [{ href: logo }];
           }
@@ -100,21 +68,21 @@ export async function fetchScoreboard(): Promise<MatchEvent[]> {
 
 export async function fetchScoreboardByDate(date: string): Promise<MatchEvent[]> {
   // date format: YYYYMMDD
-  const res = await fetch(`${SCOREBOARD_URL}?dates=${date}`, { next: { revalidate: 30 } });
+  const res = await fetch(`${SCOREBOARD_URL}?dates=${date}`, { next: { revalidate: 15 } });
   if (!res.ok) throw new Error('Failed to fetch scoreboard');
   const data = await res.json();
   return data.events || [];
 }
 
 export async function fetchStandings(): Promise<GroupStanding[]> {
-  const res = await fetch(STANDINGS_URL, { next: { revalidate: 60 } });
+  const res = await fetch(STANDINGS_URL, { next: { revalidate: 15 } });
   if (!res.ok) throw new Error('Failed to fetch standings');
   const data = await res.json();
   return data.children || [];
 }
 
 export async function fetchMatchSummary(eventId: string): Promise<MatchSummary> {
-  const res = await fetch(`${SUMMARY_BASE}?event=${eventId}`, { next: { revalidate: 30 } });
+  const res = await fetch(`${SUMMARY_BASE}?event=${eventId}`, { next: { revalidate: 15 } });
   if (!res.ok) throw new Error('Failed to fetch match summary');
   const data = await res.json();
 
@@ -136,7 +104,7 @@ export async function fetchMatchSummary(eventId: string): Promise<MatchSummary> 
   const comp = data?.header?.competitions?.[0];
   if (comp && !comp.venue?.fullName) {
     try {
-      const scoreboardRes = await fetch(`${SCOREBOARD_URL}?dates=20260611to20260719`, { next: { revalidate: 60 } });
+      const scoreboardRes = await fetch(`${SCOREBOARD_URL}?dates=20260611-20260719`, { next: { revalidate: 60 } });
       if (scoreboardRes.ok) {
         const sbData = await scoreboardRes.json();
         const matchEvent = sbData?.events?.find((e: { id: string }) => e.id === eventId);
@@ -160,56 +128,64 @@ export async function fetchNews(limit = 10): Promise<NewsItem[]> {
   return data.articles || [];
 }
 
-const STATISTICS_URL = 'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/statistics';
-
 export async function fetchGoalLeaders(): Promise<GoalLeader[]> {
-  const res = await fetch(STATISTICS_URL, { next: { revalidate: 120 } });
+  const res = await fetch(STATISTICS_URL, { next: { revalidate: 15 } });
   if (!res.ok) throw new Error('Failed to fetch statistics');
   const data = await res.json();
   const goalsStat = data.stats?.find((s: { name: string }) => s.name === 'goalsLeaders');
   const leaders: GoalLeader[] = goalsStat?.leaders || [];
 
-  // The statistics API doesn't include team info per player.
-  // We need to cross-reference with match summaries to find which team each scorer belongs to.
-  // Build a map: athleteId -> team abbreviation from finished matches.
+  // If API already includes team info, return immediately
+  if (leaders.some(l => l.team?.abbreviation)) return leaders;
+
+  // Build athlete→team map by fetching finished match summaries directly
   const playerTeamMap = new Map<string, { id: string; displayName: string; abbreviation: string; logos?: { href: string; rel?: string[] }[] }>();
 
   try {
-    const events = await fetchScoreboard();
-    const finishedEvents = events.filter(e => e.competitions[0]?.status?.type?.completed);
+    // Pre-fetch team logos (single call, cached)
+    const logosMap = await getTeamLogosMap();
 
-    // Fetch summaries in parallel for finished matches
+    // Fetch all finished matches' summaries
+    const sbRes = await fetch(`${SCOREBOARD_URL}?dates=20260611-20260719`, { next: { revalidate: 15 } });
+    if (!sbRes.ok) return leaders;
+    const sbData = await sbRes.json();
+    const finished: MatchEvent[] = (sbData.events || []).filter(
+      (e: MatchEvent) => e.competitions?.[0]?.status?.type?.completed
+    );
+
+    // Fetch all summaries in parallel (direct fetch — no logo/venue overhead)
     const summaries = await Promise.allSettled(
-      finishedEvents.map(e => fetchMatchSummary(e.id))
+      finished.map(e =>
+        fetch(`${SUMMARY_BASE}?event=${e.id}`, { next: { revalidate: 15 } })
+          .then(r => r.ok ? r.json() : null)
+      )
     );
 
     for (const result of summaries) {
-      if (result.status !== 'fulfilled') continue;
-      const summary = result.value;
+      if (result.status !== 'fulfilled' || !result.value) continue;
+      const summary = result.value as MatchSummary;
       const comp = summary.header?.competitions?.[0];
       if (!comp) continue;
 
-      // Build a map of teamId -> team info for this match
-      const teamInfoMap = new Map<string, { id: string; displayName: string; abbreviation: string; logos?: { href: string; rel?: string[] }[] }>();
+      // Build teamId→teamInfo for this match (enrich logos from cache)
+      const teamMap = new Map<string, { id: string; displayName: string; abbreviation: string; logos?: { href: string; rel?: string[] }[] }>();
       for (const c of comp.competitors) {
         if (c.team) {
-          teamInfoMap.set(c.team.id, {
+          const logo = logosMap.get(String(c.team.id)) || logosMap.get(c.team.abbreviation);
+          teamMap.set(c.team.id, {
             id: c.team.id,
             displayName: c.team.displayName,
             abbreviation: c.team.abbreviation,
-            logos: c.team.logos,
+            logos: logo ? [{ href: logo }] : c.team.logos,
           });
         }
       }
 
-      // Find goal events and map player -> team
+      // Map each goal scorer to their team
       for (const evt of (summary.keyEvents || [])) {
         if (!evt.scoringPlay) continue;
-        const scoringTeamId = evt.team?.id;
-        if (!scoringTeamId) continue;
-        const teamInfo = teamInfoMap.get(scoringTeamId);
+        const teamInfo = teamMap.get(evt.team?.id);
         if (!teamInfo) continue;
-
         for (const p of (evt.participants || [])) {
           const athleteId = p.athlete?.id;
           if (athleteId && !playerTeamMap.has(athleteId)) {
@@ -222,7 +198,6 @@ export async function fetchGoalLeaders(): Promise<GoalLeader[]> {
     // If cross-reference fails, return leaders without team info
   }
 
-  // Enrich leaders with team info
   return leaders.map(leader => ({
     ...leader,
     team: playerTeamMap.get(leader.athlete.id) || leader.team,

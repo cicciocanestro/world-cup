@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { fetchScoreboard } from '@/lib/api';
 
-export const revalidate = 30;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {

@@ -3,7 +3,7 @@ import { MatchCard } from '@/components/MatchCard';
 import { format, subDays } from 'date-fns';
 import { it } from 'date-fns/locale';
 
-export const revalidate = 30;
+export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const events = await fetchScoreboard();
