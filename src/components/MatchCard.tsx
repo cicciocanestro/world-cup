@@ -60,9 +60,11 @@ export function MatchCard({ match, featured }: MatchCardProps) {
                     <span className="text-xs font-bold text-gray-400">{home.team.abbreviation}</span>
                   )}
                 </div>
-                <span className={`font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${home.winner ? 'text-white' : 'text-gray-300'}`}>
-                  <span className="hidden sm:inline">{home.team.displayName}</span>
-                  <span className="sm:hidden">{home.team.shortDisplayName || home.team.abbreviation}</span>
+                <span className={`hidden sm:inline font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${home.winner ? 'text-white' : 'text-gray-300'}`}>
+                  {home.team.displayName}
+                </span>
+                <span className={`sm:hidden font-medium truncate max-w-[90px] ${featured ? 'text-lg' : 'text-sm'} ${home.winner ? 'text-white' : 'text-gray-300'}`}>
+                  {home.team.shortDisplayName || home.team.abbreviation}
                 </span>
               </>
             )}
@@ -83,9 +85,11 @@ export function MatchCard({ match, featured }: MatchCardProps) {
           <div className="flex items-center gap-3 flex-1 min-w-0 justify-end">
             {away?.team && (
               <>
-                <span className={`font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${away.winner ? 'text-white' : 'text-gray-300'}`}>
-                  <span className="hidden sm:inline">{away.team.displayName}</span>
-                  <span className="sm:hidden">{away.team.shortDisplayName || away.team.abbreviation}</span>
+                <span className={`hidden sm:inline font-medium truncate ${featured ? 'text-lg' : 'text-sm'} ${away.winner ? 'text-white' : 'text-gray-300'}`}>
+                  {away.team.displayName}
+                </span>
+                <span className={`sm:hidden font-medium truncate max-w-[90px] ${featured ? 'text-lg' : 'text-sm'} ${away.winner ? 'text-white' : 'text-gray-300'}`}>
+                  {away.team.shortDisplayName || away.team.abbreviation}
                 </span>
                 <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-700/50 flex items-center justify-center overflow-hidden">
                   {getTeamLogo(away.team) ? (

@@ -45,12 +45,12 @@ export default async function HomePage() {
         <div className="absolute top-0 right-0 w-40 h-40 md:w-64 md:h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-32 h-32 md:w-48 md:h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="relative">
-          <div className="flex flex-wrap items-center gap-2 mb-2 md:mb-3">
-            <span className="px-2.5 py-0.5 md:px-3 md:py-1 bg-white/10 rounded-full text-[10px] md:text-xs font-semibold text-emerald-200 uppercase tracking-wider">
+          <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-2 md:mb-3">
+            <span className="px-2 md:px-3 py-1 md:py-1 bg-white/10 rounded-full text-[10px] md:text-xs font-semibold text-emerald-200 uppercase tracking-wider whitespace-nowrap">
               Mondiali FIFA 2026™
             </span>
             {live.length > 0 && (
-              <span className="px-2.5 py-0.5 md:px-3 md:py-1 bg-red-500/20 rounded-full text-[10px] md:text-xs font-semibold text-red-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="px-2 md:px-3 py-1 md:py-1 bg-red-500/20 rounded-full text-[10px] md:text-xs font-semibold text-red-300 uppercase tracking-wider flex items-center gap-1.5 whitespace-nowrap">
                 <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                 {live.length} Live
               </span>
